@@ -1,0 +1,302 @@
+[
+  {
+    "id": "affection_0054",
+    "input": {
+      "scenario": "affection",
+      "text": "smile even in the worst of times",
+      "media": {
+        "image_url": "sample_assets/affection/affection_0054_image.png"
+      }
+    },
+    "options": {
+      "subject": [
+        "person image",
+        "waxwork display museum",
+        "mannequin used exhibit",
+        "lifelike doll seated desk"
+      ],
+      "target": [
+        "dire situation",
+        "museum display historical education",
+        "commemorative tribute figure",
+        "nostalgic portrait childhood innocence"
+      ]
+    },
+    "ground_truth": {
+      "subject": "person image",
+      "target": "dire situation",
+      "mechanism": "affective deception",
+      "label": "sad"
+    },
+    "diversity": {
+      "domain": "Online & Social Media",
+      "culture": "General Culture"
+    }
+  },
+  {
+    "id": "affection_0618",
+    "input": {
+      "scenario": "affection",
+      "text": "when your brother sucks at driving",
+      "media": {
+        "image_url": "sample_assets/affection/affection_0618_image.png"
+      }
+    },
+    "options": {
+      "subject": [
+        "speaker",
+        "man",
+        "hunter",
+        "farmer"
+      ],
+      "target": [
+        "sibling",
+        "man s rifle",
+        "man s hunting",
+        "man s posture"
+      ]
+    },
+    "ground_truth": {
+      "subject": "speaker",
+      "target": "sibling",
+      "mechanism": "multimodal incongruity",
+      "label": "bad"
+    },
+    "diversity": {
+      "domain": "Family Conversations",
+      "culture": "General Culture"
+    }
+  },
+  {
+    "id": "affection_5348",
+    "input": {
+      "scenario": "affection",
+      "text": "when the bass drops just right",
+      "media": {
+        "image_url": "sample_assets/affection/affection_5348_image.png"
+      }
+    },
+    "options": {
+      "subject": [
+        "poster",
+        "photographer",
+        "dancer",
+        "rabbi"
+      ],
+      "target": [
+        "the bass drop",
+        "dance move",
+        "crowd reaction",
+        "religious ritual"
+      ]
+    },
+    "ground_truth": {
+      "subject": "poster",
+      "target": "the bass drop",
+      "mechanism": "figurative_semantics",
+      "label": "Happy"
+    }
+  },
+  {
+    "id": "intent_0607",
+    "input": {
+      "scenario": "intent",
+      "text": "i was the best salesperson in the store.",
+      "media": {
+        "audio_caption": "The speaker's tone in the statement \"I was the best salesperson in the store\" suggests a sense of pride and confidence. The choice of words and the way the statement is made indicate that the speaker is assertive and likely has a strong belief in their abilities. There is a hint of optimism or even self-assurance in the tone, as if the speaker is reflecting on a past achievement with satisfaction.\n\nThe speaker's emotional style can be inferred as positive and self-affirming. There is a feeling of accomplishment and perhaps a bit of bravado, as they are boldly claiming to have been the best salesperson in the store. This suggests that the speaker is likelySomeone who is confident in their work and has a high opinion of their skills.\n\nThe background environment is not provided in the statement, so it is difficult to determine any specific details about the setting. However, the statement itself implies that the speaker is speaking in a professional or work-related context. It could be a conversation with colleagues, a self-reflection, or a presentation about their career. The lack of any emotional cues or contextual details about the environment leaves much to the imagination, but it is safe to assume that the speaker is in a situation where they feel comfortable discussing their accomplishments.",
+        "video_url": "sample_assets/intent/intent_0607_video.mp4",
+        "audio_url": "sample_assets/intent/intent_0607_audio.mp3"
+      }
+    },
+    "options": {
+      "subject": [
+        "speaker",
+        "store cashier",
+        "inventory clerk",
+        "customer"
+      ],
+      "target": [
+        "coworker",
+        "manager",
+        "store owner",
+        "security guard"
+      ]
+    },
+    "ground_truth": {
+      "subject": "speaker",
+      "target": "coworker",
+      "mechanism": "expressive aggression",
+      "label": "dominate"
+    },
+    "diversity": {
+      "domain": "Workplace",
+      "culture": "General Culture"
+    }
+  },
+  {
+    "id": "intent_8392",
+    "input": {
+      "scenario": "intent",
+      "text": "no, no, take your time.",
+      "media": {
+        "audio_caption": "The speaker's tone is gentle and measured, suggesting a calm and composed emotional style. The words \"take your time\" imply a patient and understanding approach, likely encouraging someone to proceed at their own pace without rush. This tone often comes from someone who is experienced, patient, and empathetic, possibly someone in a position of authority or responsibility who wants to ensure that the other person feels comfortable and not hurried. The environment is likely quiet and possibly private, allowing for such a从容 and thoughtful exchange.",
+        "video_url": "sample_assets/intent/intent_8392_video.mp4",
+        "audio_url": "sample_assets/intent/intent_8392_audio.mp3"
+      }
+    },
+    "options": {
+      "subject": [
+        "woman",
+        "man in suit beside",
+        "restaurant server background",
+        "other restaurant diners"
+      ],
+      "target": [
+        "the listnener",
+        "man standing beside her",
+        "restaurant dining atmosphere",
+        "ordering food process"
+      ]
+    },
+    "ground_truth": {
+      "subject": "woman",
+      "target": "the listnener",
+      "mechanism": "prosocial_deception",
+      "label": "mitigate"
+    }
+  },
+  {
+    "id": "intent_8442",
+    "input": {
+      "scenario": "intent",
+      "text": "it's just one gift card per customer.",
+      "media": {
+        "audio_caption": "The speaker's tone in the statement is neutral and matter-of-fact. There is no particular emotional inflection that stands out, indicating a level of detachment or professionalism. The statement is straightforward and clear, likely made in a context where precision is important, such as in customer service or during a transaction.\n\nThe speaker's background environment, however, is not explicitly described, so we can only infer that the speaker is in a professional or public setting where gift cards are being discussed. This could be a retail store, an office, or a customer service hotline where gift cards are a point of discussion. The environment would likely have a formal or controlled tone, with the speaker maintaining a professional demeanor regardless of the personal context of the gift card.\n\nIn summary, the speaker's tone is neutral and professional, with no emotional emphasis, likely in a controlled, formal setting where gift cards are being managed or discussed.",
+        "video_url": "sample_assets/intent/intent_8442_video.mp4",
+        "audio_url": "sample_assets/intent/intent_8442_audio.mp3"
+      }
+    },
+    "options": {
+      "subject": [
+        "speaker",
+        "passerby",
+        "bystander",
+        "outside vendor"
+      ],
+      "target": [
+        "customer",
+        "cashier",
+        "store display or product",
+        "register"
+      ]
+    },
+    "ground_truth": {
+      "subject": "speaker",
+      "target": "customer",
+      "mechanism": "prosocial_deception",
+      "label": "mitigate"
+    }
+  },
+  {
+    "id": "stance_0154",
+    "input": {
+      "scenario": "stance",
+      "text": "who wore it best, and the winner gets...",
+      "media": {
+        "audio_caption": "I'm sorry, but I am not able to provide a detailed description of your background environment, emotional style, or tone without any additional context or information. Could you please provide more details or clarify your question?",
+        "video_url": "sample_assets/stance/stance_0154_video.mp4",
+        "audio_url": "sample_assets/stance/stance_0154_audio.mp3"
+      }
+    },
+    "options": {
+      "subject": [
+        "glenn",
+        "event organizer",
+        "manager",
+        "contest judge"
+      ],
+      "target": [
+        "employees",
+        "store customers",
+        "non-costumed shoppers",
+        "spectators"
+      ]
+    },
+    "ground_truth": {
+      "subject": "glenn",
+      "target": "employees",
+      "mechanism": "dominant affiliation",
+      "label": "appreciative"
+    },
+    "diversity": {
+      "domain": "Workplace",
+      "culture": "General Culture"
+    }
+  },
+  {
+    "id": "stance_0830",
+    "input": {
+      "scenario": "stance",
+      "text": "you know you're official when your friend invites you to church",
+      "media": {
+        "image_url": "sample_assets/stance/stance_0830_image.png"
+      }
+    },
+    "options": {
+      "subject": [
+        "speaker",
+        "social media commenter",
+        "photo taker",
+        "mutual acquaintance"
+      ],
+      "target": [
+        "friend",
+        "coworker",
+        "partner",
+        "female coworker"
+      ]
+    },
+    "ground_truth": {
+      "subject": "speaker",
+      "target": "friend",
+      "mechanism": "protective distancing",
+      "label": "indifferent"
+    },
+    "diversity": {
+      "domain": "Intimate Relationships",
+      "culture": "General Culture"
+    }
+  },
+  {
+    "id": "stance_6987",
+    "input": {
+      "scenario": "stance",
+      "text": "not to call me that in front of people.",
+      "media": {
+        "audio_caption": "The speaker's tone is hesitant and uncertain, indicating a lack of confidence or fear of judgment from others. The emotional style suggests a shy or anxious demeanor, with a sense of vulnerability and possibly a desire to avoid scrutiny. The background environment is likely a social setting where the speaker feels out of their element, such as an event or gathering where they feel they are being watched or evaluated. The speaker's words imply a fear of appearing foolish or inadequate in the presence of others, reflecting a deep-seated insecurity or fear of judgment.",
+        "video_url": "sample_assets/stance/stance_6987_video.mp4",
+        "audio_url": "sample_assets/stance/stance_6987_audio.mp3"
+      }
+    },
+    "options": {
+      "subject": [
+        "the speaker",
+        "a store clerk",
+        "a bystander",
+        "a shopper"
+      ],
+      "target": [
+        "the listener",
+        "the cashier",
+        "the blue basket",
+        "the store manager"
+      ]
+    },
+    "ground_truth": {
+      "subject": "the speaker",
+      "target": "the listener",
+      "mechanism": "protective_distancing",
+      "label": "Concerned"
+    }
+  }
+]
