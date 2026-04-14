@@ -29,8 +29,8 @@
       "label": "sad"
     },
     "diversity": {
-      "domain": "Online & Social Media",
-      "culture": "General Culture"
+      "domain": "Networked",
+      "culture": "General"
     }
   },
   {
@@ -63,8 +63,8 @@
       "label": "bad"
     },
     "diversity": {
-      "domain": "Family Conversations",
-      "culture": "General Culture"
+      "domain": "Familial",
+      "culture": "General"
     }
   },
   {
@@ -129,8 +129,8 @@
       "label": "dominate"
     },
     "diversity": {
-      "domain": "Workplace",
-      "culture": "General Culture"
+      "domain": "Occupational",
+      "culture": "General"
     }
   },
   {
@@ -229,8 +229,8 @@
       "label": "appreciative"
     },
     "diversity": {
-      "domain": "Workplace",
-      "culture": "General Culture"
+      "domain": "Occupational",
+      "culture": "General"
     }
   },
   {
@@ -263,8 +263,8 @@
       "label": "indifferent"
     },
     "diversity": {
-      "domain": "Intimate Relationships",
-      "culture": "General Culture"
+      "domain": "Intimate",
+      "culture": "General"
     }
   },
   {
