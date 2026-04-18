@@ -4,7 +4,7 @@
 
 - `src/`
   - Core code released for anonymous review.
-  - Includes: `__init__.py`, `cli.py`, `schemas.py`, `pipeline.py`.
+  - Includes: `__init__.py`, `cli.py`, `schemas.py`, `pipeline.py`, `prompts.py`.
 
 - `samples/samples.json`
   - Curated sample set for this anonymous release.

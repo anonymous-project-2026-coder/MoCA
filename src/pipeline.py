@@ -2,6 +2,14 @@ from __future__ import annotations
 
 from typing import Any, Callable, Literal
 
+from .prompts import (
+    ANALYST_INSTRUCTIONS,
+    CHECKER_INSTRUCTIONS,
+    OBSERVER_INSTRUCTIONS,
+    QUERY_FORMULATOR_INSTRUCTIONS,
+    RETRIEVER_INSTRUCTIONS,
+    STRATEGIST_INSTRUCTIONS,
+)
 from .schemas import (
     ConflictAnalysis,
     ConsistencyCheck,
@@ -25,6 +33,15 @@ class ConflictReasoningPipeline:
     ) -> None:
         self.progress_callback = progress_callback
         self.max_revision_rounds = max(0, int(max_revision_rounds))
+        self.prompt_trace: dict[str, str] = {}
+        self.prompt_templates = {
+            "stage1": OBSERVER_INSTRUCTIONS,
+            "stage2_prompt1": QUERY_FORMULATOR_INSTRUCTIONS,
+            "stage2_prompt2": RETRIEVER_INSTRUCTIONS,
+            "stage3": ANALYST_INSTRUCTIONS,
+            "stage4": STRATEGIST_INSTRUCTIONS,
+            "stage5": CHECKER_INSTRUCTIONS,
+        }
 
     async def run(self, case: ReasoningCase) -> FinalReasoningResult:
         artifacts = await self.run_stages(case=case, stop_after="stage5")
@@ -39,7 +56,19 @@ class ConflictReasoningPipeline:
     ) -> dict[str, Any]:
         del resume_from
         del seed_artifacts
+        self.prompt_trace = {}
         artifacts: dict[str, Any] = {"case": case.model_dump(by_alias=True)}
+
+        stage1_prompt = self._render_prompt(
+            template=self.prompt_templates["stage1"],
+            variables={
+                "Text Input": case.input.text,
+                "Visual Input": self._media_visual(case),
+                "Audio Input": self._media_audio(case),
+            },
+        )
+        if stage1_prompt:
+            self.prompt_trace["stage1"] = stage1_prompt
 
         explicit = self._run_step1_explicit_perception(case)
         artifacts["stage1"] = explicit.model_dump()
@@ -47,9 +76,25 @@ class ConflictReasoningPipeline:
         if stop_after == "stage1":
             return artifacts
 
-        query_formulation, snippets, context_packet = self._run_step2_social_context(
-            case, explicit
+        stage2_prompt1 = self._render_prompt(
+            template=self.prompt_templates["stage2_prompt1"],
+            variables={"Explicit Perception": explicit.caption},
         )
+        if stage2_prompt1:
+            self.prompt_trace["stage2_prompt1"] = stage2_prompt1
+
+        query_formulation, snippets, context_packet = self._run_step2_social_context(case, explicit)
+
+        stage2_prompt2 = self._render_prompt(
+            template=self.prompt_templates["stage2_prompt2"],
+            variables={
+                "Social Query": self._query_to_text(query_formulation),
+                "Explicit Perception": explicit.caption,
+            },
+        )
+        if stage2_prompt2:
+            self.prompt_trace["stage2_prompt2"] = stage2_prompt2
+
         artifacts["stage2"] = {
             "query_formulation": query_formulation.model_dump(),
             "search_snippets": snippets,
@@ -59,23 +104,65 @@ class ConflictReasoningPipeline:
         if stop_after == "stage2":
             return artifacts
 
+        stage3_prompt = self._render_prompt(
+            template=self.prompt_templates["stage3"],
+            variables={
+                "Explicit Perception": explicit.caption,
+                "Social Context": self._context_to_text(context_packet),
+            },
+        )
+        if stage3_prompt:
+            self.prompt_trace["stage3"] = stage3_prompt
+
         conflict = self._run_step3_conflict_modeling(explicit, context_packet)
         artifacts["stage3"] = conflict.model_dump()
         self._emit(case.case_id, "stage3")
         if stop_after == "stage3":
             return artifacts
 
-        mechanism = self._run_step4_abductive_reasoning(
-            case, explicit, context_packet, conflict
+        stage4_prompt = self._render_prompt(
+            template=self.prompt_templates["stage4"],
+            variables={
+                "Context_Expectation": conflict.context_expectation,
+                "Explicit_Reality": conflict.explicit_reality,
+                "The_Conflict": conflict.conflict,
+                "Abductive_Question": conflict.abductive_question,
+                "taxonomy_reference": "",
+                "mechanisms": self._join_values(case.allowed_mechanisms),
+                "labels": self._join_values(case.allowed_labels),
+                "options.subject": self._join_values(case.options.subject),
+                "options.target": self._join_values(case.options.target),
+                "Subject": case.options.subject[0] if case.options.subject else "",
+                "Target": case.options.target[0] if case.options.target else "",
+                "Mechanism": case.allowed_mechanisms[0] if case.allowed_mechanisms else "",
+                "Label": case.allowed_labels[0] if case.allowed_labels else "",
+            },
         )
+        if stage4_prompt:
+            self.prompt_trace["stage4"] = stage4_prompt
+
+        mechanism = self._run_step4_abductive_reasoning(case, explicit, context_packet, conflict)
         artifacts["stage4"] = mechanism.model_dump()
         self._emit(case.case_id, "stage4")
         if stop_after == "stage4":
             return artifacts
 
-        check = self._run_step5_consistency_verification(
-            explicit, context_packet, conflict, mechanism
+        stage5_prompt = self._render_prompt(
+            template=self.prompt_templates["stage5"],
+            variables={
+                "Explicit Perception": explicit.caption,
+                "Social Context": self._context_to_text(context_packet),
+                "The_Conflict": conflict.conflict,
+                "Subject": mechanism.subject,
+                "Target": mechanism.target,
+                "Mechanism": mechanism.mechanism,
+                "Label": mechanism.label,
+            },
         )
+        if stage5_prompt:
+            self.prompt_trace["stage5"] = stage5_prompt
+
+        check = self._run_step5_consistency_verification(explicit, context_packet, conflict, mechanism)
         revision_history: list[dict[str, Any]] = []
         for round_id in range(1, self.max_revision_rounds + 1):
             if check.status == "ACCEPTED":
@@ -84,12 +171,8 @@ class ConflictReasoningPipeline:
                 case, explicit, refinement_hint=check.verification_note
             )
             conflict = self._run_step3_conflict_modeling(explicit, context_packet)
-            mechanism = self._run_step4_abductive_reasoning(
-                case, explicit, context_packet, conflict
-            )
-            check = self._run_step5_consistency_verification(
-                explicit, context_packet, conflict, mechanism
-            )
+            mechanism = self._run_step4_abductive_reasoning(case, explicit, context_packet, conflict)
+            check = self._run_step5_consistency_verification(explicit, context_packet, conflict, mechanism)
             revision_history.append(
                 {
                     "round": round_id,
@@ -243,3 +326,46 @@ class ConflictReasoningPipeline:
     def _emit(self, case_id: str, stage: StageName) -> None:
         if self.progress_callback:
             self.progress_callback(f"[{case_id}] {stage}")
+
+    def _render_prompt(self, template: str, variables: dict[str, str] | None = None) -> str:
+        text = template
+        if variables:
+            for key, value in variables.items():
+                text = text.replace("{" + key + "}", value)
+        return text
+
+    def _media_visual(self, case: ReasoningCase) -> str:
+        media = case.input.media
+        if not media:
+            return ""
+        if media.image_url:
+            return media.image_url
+        if media.video_url:
+            return media.video_url
+        if media.url:
+            return media.url
+        return ""
+
+    def _media_audio(self, case: ReasoningCase) -> str:
+        media = case.input.media
+        if not media or not media.audio_caption:
+            return ""
+        return media.audio_caption
+
+    def _query_to_text(self, query_formulation: QueryFormulation) -> str:
+        if not query_formulation.retrieval_questions:
+            return ""
+        return " | ".join(q.question for q in query_formulation.retrieval_questions if q.question)
+
+    def _context_to_text(self, context: ContextPacket) -> str:
+        parts: list[str] = []
+        if context.fact:
+            parts.append("fact: " + " | ".join(context.fact))
+        if context.connection:
+            parts.append("connection: " + " | ".join(context.connection))
+        if context.social_norm:
+            parts.append("social_norm: " + " | ".join(context.social_norm))
+        return "\n".join(parts)
+
+    def _join_values(self, values: list[str]) -> str:
+        return ", ".join(v for v in values if v)
